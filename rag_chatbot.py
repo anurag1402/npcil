@@ -1,17 +1,16 @@
 from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.vectorstores import FAISS
 from transformers import pipeline
 
 class NPCILHRBot:
-    def __init__(self, index_path="hr_document_index"):
+    def __init__(self, vector_store):
         """
-        Initialize HR Bot with pre-embedded documents
+        Initialize HR Bot with vector store
         """
         # Load embeddings
         self.embedding_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
         
-        # Load vector store
-        self.vector_store = FAISS.load_local(index_path, self.embedding_model)
+        # Store vector store
+        self.vector_store = vector_store
         
         # Initialize language model
         self.generator = pipeline(
@@ -36,16 +35,3 @@ class NPCILHRBot:
         result = self.generator(prompt)
         
         return result[0]['generated_text']
-
-# Example usage
-def main():
-    hr_bot = NPCILHRBot()
-    while True:
-        query = input("Ask a question about HR policies (or 'quit'): ")
-        if query.lower() == 'quit':
-            break
-        response = hr_bot.generate_response(query)
-        print("Bot Response:", response)
-
-if __name__ == "__main__":
-    main()
