@@ -1,0 +1,7 @@
+faiss-cpu
+langchain
+sentence-transformers
+transformers
+streamlit
+torch
+PyPDF2
